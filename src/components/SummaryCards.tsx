@@ -101,18 +101,18 @@ export default function SummaryCards({ transactions }: SummaryCardsProps) {
       {cards.map((card, index) => (
         <div
           key={index}
-          className={getCardStyles(card.type, card.trend)}
+          className={getCardStyles(card.type, card.trend as any)}
         >
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-medium text-gray-600 tracking-wide">
               {card.title}
             </h3>
-            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${getIconStyles(card.type, card.trend)}`}>
+            <div className={`w-8 h-8 rounded-lg flex items-center justify-center ${getIconStyles(card.type, card.trend as any)}`}>
               {card.icon}
             </div>
           </div>
           
-          <p className={`text-2xl font-semibold ${getAmountColor(card.type, card.trend)} mb-1`}>
+          <p className={`text-2xl font-semibold ${getAmountColor(card.type, card.trend as any)} mb-1`}>
             {card.type === 'credit' ? '+' : card.type === 'debit' ? '-' : ''}${Math.abs(card.amount).toFixed(2)}
           </p>
           

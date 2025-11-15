@@ -13,6 +13,8 @@ export default function Home() {
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [filter, setFilter] = useState<FilterType>('all');
   const [isFormOpen, setIsFormOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const pageSize = 10;
 
   // Load transactions from localStorage on component mount
   useEffect(() => {
@@ -32,11 +34,32 @@ export default function Home() {
     };
     
     setTransactions(prev => [newTransaction, ...prev]);
+    setIsFormOpen(false); // Close the form after adding
+  };
+
+  const editTransaction = (id: string, updates: Partial<Transaction>) => {
+    setTransactions(prev => 
+      prev.map(transaction => 
+        transaction.id === id ? { ...transaction, ...updates } : transaction
+      )
+    );
+  };
+
+  const deleteTransaction = (id: string) => {
+    setTransactions(prev => prev.filter(transaction => transaction.id !== id));
   };
 
   const filteredTransactions = transactions.filter(transaction => 
     filter === 'all' || transaction.type === filter
   );
+
+  // Calculate total pages
+  const totalPages = Math.ceil(filteredTransactions.length / pageSize);
+
+  // Reset to page 1 when filter changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [filter]);
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -71,8 +94,16 @@ export default function Home() {
         {/* Filters */}
         <TransactionFilters currentFilter={filter} onFilterChange={setFilter} />
 
-        {/* Transaction List */}
-        <TransactionList transactions={filteredTransactions} />
+        {/* Transaction List with enhanced props */}
+        <TransactionList 
+          transactions={filteredTransactions}
+          onEditTransaction={editTransaction}
+          onDeleteTransaction={deleteTransaction}
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          pageSize={pageSize}
+        />
 
         {/* Add Transaction Form Modal */}
         <TransactionForm
