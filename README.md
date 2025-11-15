@@ -151,7 +151,7 @@ Date picker and amount formatting
 * Clone the repository
 
 ```bash bash
-git clone <repository-url>
+git clone https://github.com/Isaacprogi/afripay.git
 cd afripay-dashboard
 ```
 
